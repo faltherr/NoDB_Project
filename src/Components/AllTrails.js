@@ -1,14 +1,15 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import Favorites from './Favorites'
+// import Favorites from './Favorites'
 
 export default class AllTrails extends Component {
     constructor() {
         super()
         this.state = {
             trailsList: [],
-            selected: []
+            searched: [],
+            trailString: ''
         }
     }
 
@@ -23,9 +24,26 @@ export default class AllTrails extends Component {
         })
     }
 
-    handleClick(e){
-        this.setState(selected.push(e))
+    // Filter Search Bar
+    handleChange = (trail) => {
+        this.setState({trailString:trail})
     }
+
+    clickSearch = (trail) => {
+        var unfiltered = this.state.trailsList;
+        var search = [];
+        for (let i = 0; i<unfiltered.length; i++){
+            if (unfiltered[i].name.indexOf(trail)>-1){
+                search.push(unfiltered[i])
+            }
+        }
+        this.setState({trailsList:search})
+    }
+
+    // handleClick(e){
+    //     console.log(e)
+        // this.setState(selected.push(e))
+    // }
 
     // handleClick(){
     //     let arr = [];
@@ -43,17 +61,22 @@ export default class AllTrails extends Component {
     render() {
         let allTrails = this.state.trailsList.map((element, index) => {
             return (
-                <h2 key={index}> {element.name} 
-                    <p>Trail Length: {element.length} miles</p> 
-                    <p>Trail Difficulty: {element.difficulty} </p>  
+                <h2 key={index} > {element.name} 
+                    {/* <p>Trail Length: {element.length} miles</p> 
+                    <p>Trail Difficulty: {element.difficulty} </p>   */}
                 </h2>
             )
         })
         return (
-            <div className="App" onClick={this.handleClick}>
+            <div className="App" >
+                <input onChange ={ (e) => this.handleChange(e.target.value) }></input>
+                <button onClick = { () => {this.clickSearch(this.state.trailString)}}> Search </button>
                 {allTrails}
-                {/* <Favorites add={this.handleAddFav} /> */}
+
+               
             </div>
         );
     }
 }
+
+// onClick = {this.clickSearch(this.state.trailString)}
