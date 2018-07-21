@@ -8,7 +8,7 @@ export default class AllTrails extends Component {
         super()
         this.state = {
             trailsList: [],
-            searched: [],
+            selected: [],
             trailString: ''
         }
     }
@@ -40,6 +40,25 @@ export default class AllTrails extends Component {
         this.setState({trailsList:search})
     }
 
+    // clickToSelect = (e, data) => {
+    //     console.log(data)
+    // }
+
+
+    // clicker = (arr) => {
+    //     let newArr = []
+    //     for (let i=0;i<arr.length;i++){
+    //         newArr.push(arr[i])
+    //     }
+    // }
+
+    // clickToSelect = (e) =>{
+    //     let selected = [];
+    //     selected.push(e.target)
+    //     this.setState({selected:selected})
+    //     console.log(selected)
+    // }
+
     // handleClick(e){
     //     console.log(e)
         // this.setState(selected.push(e))
@@ -61,18 +80,19 @@ export default class AllTrails extends Component {
     render() {
         let allTrails = this.state.trailsList.map((element, index) => {
             return (
-                <h2 key={index} > {element.name} 
+                <h2 key={index} onClick={ (e) => {this.clickToSelect(e)}} > {element.name}  
                     {/* <p>Trail Length: {element.length} miles</p> 
                     <p>Trail Difficulty: {element.difficulty} </p>   */}
+                    <button>Click</button>
                 </h2>
+                
             )
         })
         return (
             <div className="App" >
-                <input onChange ={ (e) => this.handleChange(e.target.value) }></input>
+                <input placeholder='Search by name' onChange ={ (e) => this.handleChange(e.target.value) }></input>
                 <button onClick = { () => {this.clickSearch(this.state.trailString)}}> Search </button>
-                {allTrails}
-
+                {allTrails} 
                
             </div>
         );
