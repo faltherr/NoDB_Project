@@ -40,51 +40,26 @@ export default class AllTrails extends Component {
         this.setState({trailsList:search})
     }
 
-    // clickToSelect = (e, data) => {
-    //     console.log(data)
-    // }
-
-
-    // clicker = (arr) => {
-    //     let newArr = []
-    //     for (let i=0;i<arr.length;i++){
-    //         newArr.push(arr[i])
-    //     }
-    // }
-
-    // clickToSelect = (e) =>{
-    //     let selected = [];
-    //     selected.push(e.target)
-    //     this.setState({selected:selected})
-    //     console.log(selected)
-    // }
-
-    // handleClick(e){
-    //     console.log(e)
-        // this.setState(selected.push(e))
-    // }
-
-    // handleClick(){
-    //     let arr = [];
-    //     arr.push(this.trailsList.name)
-    //     this.setState({selected: arr})
-    // }
-
-    // handleAddFav(fav){
-    //     this.setState({selected:[...this.state.selected, fav]})
-    // }
-
-
+    //Click to select an item and update the state of the select object
+    
+    clickToSelect = (e) => {
+        let select = this.state.selected;
+        select.push(e)
+        console.log(select)
+        this.setState({selected:select})
+        console.log(this.state.selected)
+        }
 
 
     render() {
         let allTrails = this.state.trailsList.map((element, index) => {
             return (
-                <h2 key={index} onClick={ (e) => {this.clickToSelect(e)}} > {element.name}  
+                <div> 
+                    <h3 key={index} onClick = {() => this.clickToSelect(element)}> {element.name}   </h3>
                     {/* <p>Trail Length: {element.length} miles</p> 
                     <p>Trail Difficulty: {element.difficulty} </p>   */}
-                    <button>Click</button>
-                </h2>
+                    
+                </div>
                 
             )
         })
@@ -93,6 +68,7 @@ export default class AllTrails extends Component {
                 <input placeholder='Search by name' onChange ={ (e) => this.handleChange(e.target.value) }></input>
                 <button onClick = { () => {this.clickSearch(this.state.trailString)}}> Search </button>
                 {allTrails} 
+
                
             </div>
         );
@@ -100,3 +76,6 @@ export default class AllTrails extends Component {
 }
 
 // onClick = {this.clickSearch(this.state.trailString)}
+
+// To access an element anywhere in our script:
+// ref={(a) => this._inputElement = a}
