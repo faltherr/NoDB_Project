@@ -3,7 +3,15 @@ let trails = require('../trailsData.js')
 module.exports = {
     // Read
     readTrails: (req, res) => {
+        if (req.query.difficulty){
+            let filteredTrails = trails.filter(trail =>{
+                let {difficulty} = req.query
+                return trail.difficulty === difficulty
+            })
+            return res.send(filteredTrails)
+        } else {
         res.status(200).send(trails);
+        }
     },
     //Create
     createTrails: (req, res) => {

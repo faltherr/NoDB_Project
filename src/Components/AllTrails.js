@@ -35,7 +35,7 @@ export default class AllTrails extends Component {
     // Can I make this a functional component?
     removeTrail(id) {
         axios.delete(`/api/trails/${id}`).then(res => {
-            console.log('Trail Removed')
+            // console.log('Trail Removed')
             this.setState({
                 trailsList: res.data
             })
@@ -60,13 +60,25 @@ export default class AllTrails extends Component {
     }
 
     filterByDifficulty = () => {
-        let difficulty = this.difficulty.value;
-    
-        axios.get(`/api/data/?difficulty=${difficulty}`).then(res => {
+        let trailDifficulty = this.trailDifficulty.value;
+        // console.log(this.trailDifficulty)
+        axios.get(`/api/trails/?difficulty=${trailDifficulty}`).then(res => {
           this.setState({
             trailsList:res.data
         })
       })
+    }
+
+    updateTrailStatusFn = (id, trailCondition) => {
+        let updateTrailStatus ={
+            conditionStatus : trailCondition
+        }
+        axios.put(`/api/trails/${id}`, updateTrailStatus).then(res => {
+            console.log('Trail updated', updateTrailStatus)
+            this.setState({
+                trailsList : res.data
+            })
+        })
     }
 
     // Filter Search Bar
@@ -123,6 +135,9 @@ export default class AllTrails extends Component {
                         <p> Summary: </p>
                         <p> {element.summary} </p>
                     </div>
+                    {/* Update trail status */}
+                    <button className ='closeTrail' onClick={() => this.updateTrailStatusFn(element.id, 'Closed')}> Trail is Closed </button>
+                    <button className ='closeTrail' onClick={() => this.updateTrailStatusFn(element.id, 'Open')}> Trail is Open </button>
                     <button className="btnDelete" onClick={() => this.removeTrail(element.id)}>
                         Delete Trail
                     </button>
@@ -138,10 +153,9 @@ export default class AllTrails extends Component {
                             <input placeholder='Search by name' value={this.state.trailString} onChange={(e) => this.handleChange(e.target.value)}></input>
                             <button onClick={() => { this.clickSearch(this.state.trailString) }}> Search </button>
                             {/* This is a filter with options for difficulty */}
-                            <select onChange={this.filterByDifficulty}
-                                    ref={difficulty => {
-                                    this.difficulty = difficulty;
-                                    }}
+                            <select ref={trailDifficulty => {
+                                    this.trailDifficulty = trailDifficulty;
+                                    }}onChange={this.filterByDifficulty}
                                 className="btn-sp"
                                 value="">
                                 <option value="" disabled>
@@ -163,7 +177,8 @@ export default class AllTrails extends Component {
                         <Favorites holdStateList={this.state.selected} reset={this.resetHoldStateList} />
                     </div>
                 </div>
-
+                <br></br>
+                <p> Do you know of a trail we don't have in our list? Add it here! </p>
                 {/* New Trail Form  */}
                 <p className="form-wrap">
                     <input
