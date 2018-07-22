@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import './App.css';
+import './CSS/main.css';
 
 import AllTrails from './Components/AllTrails'
 // import Favorites from './Components/Favorites'
@@ -8,7 +8,7 @@ import AllTrails from './Components/AllTrails'
 class App extends Component {
   render() {
     return (
-      <div>
+      <div className='allTrailsMain'>
         <div>
           <AllTrails />
           {/* <Favorites /> */}

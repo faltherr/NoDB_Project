@@ -82,15 +82,19 @@ export default class Favorites extends Component {
     render() {
         let favoritesList = this.state.favorites.map((element, index) => {
             return (
-                <div key={index}>
+                <div key={index} >
                     <h2 key={index}> {element.name} </h2>
                 </div>
             )
         })
         return (
-            <div>
+            <div className='favoritesSubMainContainer'>
+                <div className='favsButtonHolder'>
                 <button onClick={() => this.handleAdd()}>Add to Favorites</button>
+                </div>
+                <div className='favsList'> My Favorite Hikes
                 {favoritesList}
+                </div>
             </div>
         )
     }
@@ -98,4 +102,6 @@ export default class Favorites extends Component {
 
 
 }
+
+
 

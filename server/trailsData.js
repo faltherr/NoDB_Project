@@ -1,4 +1,4 @@
-module.exports= [
+module.exports=[
     {
         "id": 7002420,
         "name": "Lake Blanche Trail",

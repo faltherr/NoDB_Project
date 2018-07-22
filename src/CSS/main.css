@@ -1,0 +1,92 @@
+.allTrailsMain{
+    background-color: blueviolet;
+}
+
+.App{
+    display: flex;
+    flex-direction: column;
+    background-color: lightblue;
+    height: 100vh;
+    width: 100%;
+
+}
+
+.topBar{
+    background-color: blue;
+    height: 10%;
+    width: 100%;
+}
+
+.mainContent{
+    display: flex;
+    flex-direction: row;
+    height: 90%;
+    width: 100%;
+}
+
+.trailsMainContainer{
+    height: 100%;
+    width: 50%;
+    padding: 2%;
+}
+
+.header{
+    height: 10%;
+    width: 100%;
+}
+
+.trails{
+    height: 90%;
+    width: 100%;
+    overflow: scroll;
+}
+
+.eachTrail{
+    display: flex;
+    flex-direction: column;
+    height: 30vh;
+    width: 100%;
+    border-style: solid;
+    border-color: black;
+}
+
+.trailsTitleAndPhoto{
+    display:flex;
+    flex-direction: inline;
+}
+
+.trailsConditionStar{
+    display:flex;
+    flex-direction: inline;
+}
+
+.trailLengthDifficulty{
+    display:flex;
+    flex-direction: inline;
+}
+
+.favoritesMainContainer{
+    height: 100%;
+    width: 50%;
+}
+
+.favoritesSubMainContainer{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 2%;
+}
+
+.favsButtonHolder{
+    height: 10%;
+    width: 100%; 
+}
+
+.favsList{
+    height: 90%;
+    width: 100%;
+}
+
+
+
