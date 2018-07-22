@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-// import Favorites from './Favorites'
+import Favorites from './Favorites'
 
 export default class AllTrails extends Component {
     constructor() {
@@ -9,8 +9,11 @@ export default class AllTrails extends Component {
         this.state = {
             trailsList: [],
             selected: [],
-            trailString: ''
+            trailString: '',
+            isToggleOn: true
         }
+
+        this.resetHoldStateList = this.resetHoldStateList.bind(this)
     }
 
     componentDidMount() {
@@ -20,7 +23,7 @@ export default class AllTrails extends Component {
             //     return t.results
             // })
             this.setState({ trailsList: results.data })
-            console.log(this.state.trailsList)
+            // console.log(this.state.trailsList)
         })
     }
 
@@ -45,16 +48,22 @@ export default class AllTrails extends Component {
     clickToSelect = (e) => {
         let select = this.state.selected;
         select.push(e)
-        console.log(select)
+        // console.log(select)
         this.setState({selected:select})
-        console.log(this.state.selected)
+        // console.log(this.state.selected)
         }
 
+
+        resetHoldStateList(favs){
+            this.setState({selected: []})
+            // console.log("resetting state")
+            // console.log("passed param", favs)
+        }
 
     render() {
         let allTrails = this.state.trailsList.map((element, index) => {
             return (
-                <div> 
+                <div key={index}> 
                     <h3 key={index} onClick = {() => this.clickToSelect(element)}> {element.name}   </h3>
                     {/* <p>Trail Length: {element.length} miles</p> 
                     <p>Trail Difficulty: {element.difficulty} </p>   */}
@@ -65,10 +74,10 @@ export default class AllTrails extends Component {
         })
         return (
             <div className="App" >
-                <input placeholder='Search by name' onChange ={ (e) => this.handleChange(e.target.value) }></input>
+                <input placeholder='Search by name' value = {this.state.trailString} onChange ={ (e) => this.handleChange(e.target.value) }></input>
                 <button onClick = { () => {this.clickSearch(this.state.trailString)}}> Search </button>
                 {allTrails} 
-
+                <Favorites holdStateList = {this.state.selected} reset={this.resetHoldStateList}/>
                
             </div>
         );
