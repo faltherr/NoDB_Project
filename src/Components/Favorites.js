@@ -29,7 +29,7 @@ export default class Favorites extends Component {
         let uniqueFavs = this.props.holdStateList.filter(element => !this.state.favorites.includes(element));
         uniqueFavs.map((obj) => this.state.favorites.push(obj))
         this.props.reset(this.state.favorites)
-        console.log("favorites state", this.state.favorites)
+        // console.log("favorites state", this.state.favorites)
 
         // let favs = this.state.favorites;
         // let int = this.props.holdStateList
@@ -90,9 +90,10 @@ export default class Favorites extends Component {
         return (
             <div className='favoritesSubMainContainer'>
                 <div className='favsButtonHolder'>
-                <button onClick={() => this.handleAdd()}>Add to Favorites</button>
+                    <button className='addToFavoritesButton' onClick={() => this.handleAdd()}>Add to Favorites</button>
                 </div>
-                <div className='favsList'> My Favorite Hikes
+                <div className ='favsTitle'> My Favorite Hikes </div>
+                <div className='favsList'> 
                 {favoritesList}
                 </div>
             </div>

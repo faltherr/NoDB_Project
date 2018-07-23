@@ -2,10 +2,26 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 import Favorites from './Favorites'
+import TrailCounter from './TrailCounter'
+
+import { ToastContainer, ToastStore } from 'react-toasts';
+
+import TrailLength from './TrailLength'
+
+// import { OpenWeatherMap } from 'react-weather';
+
+// import { WeatherWidget } from 'react-native-weather';
+
+// Failed attempts at functional components
+// import OpenWeatherMap from './Weather'
+import DeleteButton from './DeleteButton'
+// import Averager from './Averager'
+
 // import '../CSS/App.css';
 
+// No idea how to use Toast
 // Toast notification dependencies
-// import { ToastContainer, toast } from '../react-toastify';
+
 
 
 export default class AllTrails extends Component {
@@ -15,7 +31,9 @@ export default class AllTrails extends Component {
             trailsList: [],
             selected: [],
             trailString: '',
-            isToggleOn: true
+            // toggleBackground: false
+            // this.child = React.createRef()
+            // isToggleOn: true
         }
 
         this.resetHoldStateList = this.resetHoldStateList.bind(this)
@@ -28,18 +46,18 @@ export default class AllTrails extends Component {
             //     return t.results
             // })
             this.setState({ trailsList: results.data })
-            // console.log(this.state.trailsList)
+            // console.log("TRAILS LIST!!!!!!!!!!!!!!!!!!", this.state.trailsList)
         })
     }
 
-    // Can I make this a functional component?
-    removeTrail(id) {
+    removeTrail = (id) => {
         axios.delete(`/api/trails/${id}`).then(res => {
             // console.log('Trail Removed')
             this.setState({
                 trailsList: res.data
             })
         })
+        ToastStore.success('Successfully removed trail')
     }
 
     addTrail = () => {
@@ -57,26 +75,29 @@ export default class AllTrails extends Component {
                 trailsList: res.data
             })
         })
+        ToastStore.success('Successfully added trail')
     }
 
     filterByDifficulty = () => {
         let trailDifficulty = this.trailDifficulty.value;
         // console.log(this.trailDifficulty)
         axios.get(`/api/trails/?difficulty=${trailDifficulty}`).then(res => {
-          this.setState({
-            trailsList:res.data
+            this.setState({
+                trailsList: res.data
+            })
         })
-      })
     }
 
+    //Update Trail Status
+
     updateTrailStatusFn = (id, trailCondition) => {
-        let updateTrailStatus ={
-            conditionStatus : trailCondition
+        let updateTrailStatus = {
+            conditionStatus: trailCondition
         }
         axios.put(`/api/trails/${id}`, updateTrailStatus).then(res => {
-            console.log('Trail updated', updateTrailStatus)
+            // console.log('Trail updated', updateTrailStatus)
             this.setState({
-                trailsList : res.data
+                trailsList: res.data
             })
         })
     }
@@ -107,6 +128,7 @@ export default class AllTrails extends Component {
         // console.log(this.state.selected)
     }
 
+    //Reset the state of the selected items to an empty array
 
     resetHoldStateList(favs) {
         this.setState({ selected: [] })
@@ -115,6 +137,33 @@ export default class AllTrails extends Component {
         // console.log("passed param", favs)
     }
 
+    trailCount = () => {
+        return this.state.trailsList.length
+        // console.log('222222222222222222', this.state.trailsList)
+    }
+
+    // trailAverageElevation = () =>{
+
+    // }
+
+    //Why does this not work? I can't get the value on state of the trails list...
+
+    trailLength = () => {
+        let newCalc = [];
+        let arr = this.state.trailsList;
+        // console.log("1111111111111111111",arr)
+        for (let i = 0; i < arr.length; i++) {
+            newCalc.push(+arr[i]['length'])
+        }
+        // console.log("5555555555", newCalc)
+        let sumLength = 0;
+
+        for (let j = 0; j < newCalc.length; j++) {
+            sumLength += newCalc[j]
+        }
+        return parseInt(sumLength, 10)
+
+    }
 
     render() {
         let allTrails = this.state.trailsList.filter((element, index) => {
@@ -123,40 +172,53 @@ export default class AllTrails extends Component {
             return (
                 <div key={index} className="eachTrail">
                     <div className='trailsTitleAndPhoto'>
-                        <h3 key={index} onClick={() => this.clickToSelect(element)}> {element.name}   </h3>
+                        <h3 key={index} className='headerChanger' onClick={() => this.clickToSelect(element)} > {element.name} </h3>
                     </div>
-                    <div className="trailsConditionStar">
-                        <p> Trail Conditions: {element.conditionStatus} Stars (Out of 5): {element.stars}</p>
-                    </div>
-                    <div className='trailLengthDifficulty'>
-                        <p>Trail Length: {element.length} miles Trail Difficulty: {element.difficulty} </p>
+                    <div className='splitForPhotos'>
+                        <div className='textColumnOnLeft'>
+                                <p className='summaryText'> Trail Conditions: {element.conditionStatus}  </p>
+                                <p className='summaryText'>Stars:  {element.stars}</p>
+                                <p className='summaryText'>Trail Length:  {element.length} miles </p>
+                                <p className='summaryText'>Trail Difficulty: {element.difficulty} </p>
+                            
+                        </div>
+                        <img className='photoColumnOnRight' src={element.imgMedium} />
                     </div>
                     <div className='trailSummary'>
+                        <div className='summaryBox'>
                         <p> Summary: </p>
                         <p> {element.summary} </p>
+                        </div>
                     </div>
-                    {/* Update trail status */}
-                    <button className ='closeTrail' onClick={() => this.updateTrailStatusFn(element.id, 'Closed')}> Trail is Closed </button>
-                    <button className ='closeTrail' onClick={() => this.updateTrailStatusFn(element.id, 'Open')}> Trail is Open </button>
-                    <button className="btnDelete" onClick={() => this.removeTrail(element.id)}>
-                        Delete Trail
-                    </button>
+                    <div className='statusSplitter'>
+                        <div>Do you know the current status of this trail? </div>
+                        <div className='trailStatusContainer'>
+                            <button className='formClass' onClick={() => { this.updateTrailStatusFn(element.id, 'Closed'); ToastStore.success('Trail is now closed') }}> Trail is Closed </button>
+                            <button className='formClass' onClick={() => { this.updateTrailStatusFn(element.id, 'Open'); ToastStore.success('Trail is now open') }}> Trail is Open </button>
+                        </div>
+                    </div>
+                    <div className='trailRemoverContainer'>
+                    <div> Has this trail permanently closed? </div>
+                    <DeleteButton id={element.id} deleteTrail={this.removeTrail} />
+                    </div>
+                    {/* {console.log("element", element)} */}
                 </div>
+
             )
         })
         return (
             <div className="App" >
-                <div className="topBar"></div>
+                <div className="topBar"> 
+                <h1 className='titleText'  > Salt Lake Trail Directory</h1> </div>
                 <div className="mainContent">
                     <div className='trailsMainContainer'>
                         <div className='header'>
-                            <input placeholder='Search by name' value={this.state.trailString} onChange={(e) => this.handleChange(e.target.value)}></input>
-                            <button onClick={() => { this.clickSearch(this.state.trailString) }}> Search </button>
+                            <input placeholder='Search by name' className='formClass' value={this.state.trailString} onChange={(e) => this.handleChange(e.target.value)}></input>
+                            <button className='formClass' onClick={() => { this.clickSearch(this.state.trailString) }}> Search </button>
                             {/* This is a filter with options for difficulty */}
-                            <select ref={trailDifficulty => {
-                                    this.trailDifficulty = trailDifficulty;
-                                    }}onChange={this.filterByDifficulty}
-                                className="btn-sp"
+                            <select className='formClass' ref={trailDifficulty => {
+                                this.trailDifficulty = trailDifficulty;
+                            }} onChange={this.filterByDifficulty}
                                 value="">
                                 <option value="" disabled>
                                     Filter by Difficulty
@@ -168,29 +230,37 @@ export default class AllTrails extends Component {
                                 <option value="black">Difficult</option>
                                 <option value="dblack">Difficult plus</option>
                             </select>
+                            {/* <StarFilter className='starFilter' trails={this.state.trailsList} /> */}
                         </div>
                         <div className='trails'>
                             {allTrails}
                         </div>
+                        <div className='trailStatsContainer'>
+                        <TrailCounter totalTrails={this.trailCount} />
+                        <TrailLength totalLength={this.trailLength} />
+                        </div>
+                        {/* <Averager  arrTrails={this.state.trailsList}/> */}
                     </div>
                     <div className="favoritesMainContainer">
                         <Favorites holdStateList={this.state.selected} reset={this.resetHoldStateList} />
                     </div>
                 </div>
                 <br></br>
-                <p> Do you know of a trail we don't have in our list? Add it here! </p>
+                <br></br>
+                <div className='newTrailFormContainer'>
+                <p className='trailStats'> Do you know of a trail we don't have in our list? Add it here! </p>
                 {/* New Trail Form  */}
                 <p className="form-wrap">
                     <input
                         className="btn-sp"
-                        placeholder="name"
+                        placeholder="Trail Name"
                         ref={name => {
                             this.name = name;
                         }}
                     />
                     <input
                         className="btn-sp"
-                        placeholder="trailCondition"
+                        placeholder="Trail Condition"
                         ref={conditionStatus => {
                             this.conditionStatus = conditionStatus;
                         }}
@@ -198,7 +268,7 @@ export default class AllTrails extends Component {
                     <input
                         type="number"
                         className="btn-sp"
-                        placeholder="stars"
+                        placeholder="Stars"
                         ref={stars => {
                             this.stars = stars;
                         }}
@@ -206,21 +276,21 @@ export default class AllTrails extends Component {
                     <input
                         type="number"
                         className="btn-sp"
-                        placeholder="length"
+                        placeholder="Length (miles)"
                         ref={length => {
                             this.length = length;
                         }}
                     />
                     <input
                         className="btn-sp"
-                        placeholder="difficulty"
+                        placeholder="Difficulty"
                         ref={difficulty => {
                             this.difficulty = difficulty;
                         }}
                     />
                     <input
                         className="btn-sp"
-                        placeholder="summary"
+                        placeholder="Summary"
                         ref={summary => {
                             this.summary = summary;
                         }}
@@ -230,13 +300,11 @@ export default class AllTrails extends Component {
                         Add a trail
             </button>
                 </p>
-
+                </div>
+                {/* <WeatherWidget api={"35762496bb47b7a6a5f448e76975d31f"} lat={"40.76078"} lng={"-111.891052"}/> */}
+                {/* <OpenWeatherMap city="Salt Lake City" country="US" appid="c3aec212608b77670a41f13a3813ff32"  /> */}
+                <ToastContainer store={ToastStore} />
             </div>
         );
     }
 }
-
-// onClick = {this.clickSearch(this.state.trailString)}
-
-// To access an element anywhere in our script:
-// ref={(a) => this._inputElement = a}
